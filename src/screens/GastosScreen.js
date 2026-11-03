@@ -20,8 +20,10 @@ import {
   buscarGastos,
 } from '../controllers/GastosController';
 
-import FormularioGasto from '../components/FormularioGasto';
-import ListaGastos from '../components/ListaGastos';
+import { CATEGORIAS } from '../models/Gasto';
+
+import FormularioGasto from '../componentes/FormularioGasto';
+import ListaGastos from '../componentes/ListaGastos';
 
 export default function GastosScreen() {
   const [gastos, setGastos] = useState([]);
@@ -30,6 +32,7 @@ export default function GastosScreen() {
   const [monto, setMonto] = useState('');
   const [categoria, setCategoria] = useState('');
   const [busqueda, setBusqueda] = useState('');
+  const [filtro, setFiltro] = useState('Todas');
 
   const [gastoEnEdicion, setGastoEnEdicion] = useState(null);
 
@@ -40,7 +43,7 @@ export default function GastosScreen() {
 
   const modoEdicion = gastoEnEdicion !== null;
   const total = calcularTotal(gastos);
-  const gastosVisibles = buscarGastos(gastos, busqueda);
+  const gastosVisibles = buscarGastos(gastos, busqueda, filtro);
 
   useEffect(() => {
     async function iniciar() {
@@ -84,6 +87,7 @@ export default function GastosScreen() {
 
       setGastos(nuevosGastos);
       setBusqueda('');
+      setFiltro('Todas');
       limpiarFormulario();
     } catch (error) {
       Alert.alert(
@@ -121,6 +125,7 @@ export default function GastosScreen() {
 
       setGastos(nuevosGastos);
       setBusqueda('');
+      setFiltro('Todas');
       limpiarFormulario();
     } catch (error) {
       Alert.alert(
@@ -239,6 +244,29 @@ export default function GastosScreen() {
         onChangeText={setBusqueda}
       />
 
+      <View style={styles.filtros}>
+        {['Todas', ...CATEGORIAS].map((item) => (
+          <Pressable
+            key={item}
+            style={[
+              styles.filtro,
+              filtro === item && styles.filtroActivo,
+            ]}
+            onPress={() => setFiltro(item)}
+            accessibilityRole="button"
+          >
+            <Text
+              style={[
+                styles.textoFiltro,
+                filtro === item && styles.textoFiltroActivo,
+              ]}
+            >
+              {item}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+
       <ListaGastos
         gastos={gastosVisibles}
         onEliminarGasto={manejarEliminar}
@@ -293,6 +321,29 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 16,
     fontSize: 15,
+  },
+  filtros: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 16,
+  },
+  filtro: {
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
+  filtroActivo: {
+    backgroundColor: '#001F3F',
+  },
+  textoFiltro: {
+    color: '#001F3F',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  textoFiltroActivo: {
+    color: '#FFFFFF',
   },
   cargando: {
     flex: 1,

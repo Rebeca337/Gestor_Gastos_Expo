@@ -1,3 +1,11 @@
+export const CATEGORIAS = [
+  'Alimentación',
+  'Transporte',
+  'Entretenimiento',
+  'Salud',
+  'Otros',
+];
+
 export function crearGasto(descripcion, monto, categoria) {
   return {
     id: Date.now().toString(),

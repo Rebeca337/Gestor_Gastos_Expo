@@ -3,8 +3,11 @@ import {
   Text,
   TextInput,
   Button,
+  Pressable,
   StyleSheet,
 } from 'react-native';
+
+import { CATEGORIAS } from '../models/Gasto';
 
 export default function FormularioGasto({
   descripcion,
@@ -35,12 +38,30 @@ export default function FormularioGasto({
         keyboardType="number-pad"
       />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Categoría"
-        value={categoria}
-        onChangeText={setCategoria}
-      />
+      <Text style={styles.etiqueta}>Categoría</Text>
+
+      <View style={styles.categorias}>
+        {CATEGORIAS.map((item) => (
+          <Pressable
+            key={item}
+            style={[
+              styles.categoria,
+              categoria === item && styles.categoriaActiva,
+            ]}
+            onPress={() => setCategoria(item)}
+            accessibilityRole="button"
+          >
+            <Text
+              style={[
+                styles.textoCategoria,
+                categoria === item && styles.textoCategoriaActiva,
+              ]}
+            >
+              {item}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
 
       <Button
         title={modoEdicion ? 'Guardar cambios' : 'Agregar gasto'}
@@ -72,6 +93,34 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 10,
     fontSize: 15,
+  },
+  etiqueta: {
+    color: '#777777',
+    fontSize: 14,
+    marginBottom: 8,
+  },
+  categorias: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 14,
+  },
+  categoria: {
+    backgroundColor: '#E6EBF2',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
+  categoriaActiva: {
+    backgroundColor: '#001F3F',
+  },
+  textoCategoria: {
+    color: '#001F3F',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  textoCategoriaActiva: {
+    color: '#FFFFFF',
   },
   textoEdicion: {
     color: '#777777',

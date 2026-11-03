@@ -86,10 +86,15 @@ export function calcularTotal(gastos) {
   return total;
 }
 
-export function buscarGastos(gastos, busqueda) {
-  return gastos.filter((gasto) =>
-    gasto.descripcion
+export function buscarGastos(gastos, busqueda, filtro) {
+  return gastos.filter((gasto) => {
+    const coincideBusqueda = gasto.descripcion
       .toLowerCase()
-      .includes(busqueda.trim().toLowerCase())
-  );
+      .includes(busqueda.trim().toLowerCase());
+
+    const coincideCategoria =
+      filtro === 'Todas' || gasto.categoria === filtro;
+
+    return coincideBusqueda && coincideCategoria;
+  });
 }
